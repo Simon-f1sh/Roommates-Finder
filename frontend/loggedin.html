@@ -1,0 +1,97 @@
+<html>
+    <style>
+        body {background-color: powderblue;}
+        h1{
+            color: blue;
+        }
+        p{
+            color:red;
+        }
+        button{
+            height:50px; 
+            width:100px; 
+        }
+        div{
+            text-align:center;
+        }
+    </style>
+    <head>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <title>Logged in Page</title>
+    </head>
+    <body>
+        <a href=index.html><button id="back">Logout</button></a>
+
+        <div id="main_body">
+            <!-- JS will automatically generate some context -->
+        </div>
+
+        <hr>
+
+        <div id="counters">
+            <!-- JS will list all counters here -->
+        </div>
+
+        <hr>
+
+        <div>
+            <label for="add_counter_value">Initial value:</label>
+            <input id="add_counter_value" type="integer"></input>
+            <button id="add_counter_btn" onclick="addCounter()">Add a Counter</button>
+            <p style="display: none" id="add_counter_warning">Invalid value for a counter</p>
+        </div>
+
+    </body>
+
+    <script>
+        this.init();
+
+        function init() {
+            if (typeof(Storage) !== "undefined" && localStorage.uEmail && localStorage.uPwd && localStorage.sessionKey) {
+                var user_info = document.createElement("H1");
+                user_info.innerText = "You are logged in as " + localStorage.uEmail;
+                document.getElementById("main_body").appendChild(user_info);
+            } else {
+                console.log("Your browser doesn't support web storage...");
+                return;
+            }
+
+            // make an ajax post
+            $.ajax({
+                type: "POST",
+                url: "/listcounters",
+                dataType: "json",
+                data: JSON.stringify({ "uid": localStorage.uId, "uEmail": localStorage.uEmail, "sessionKey": localStorage.sessionKey }),
+                success: this.listCountersResponse
+            });
+        }
+
+        function listCountersResponse(data) {
+            // TODO: find a way to list all mData
+        }
+
+        function addCounter() {
+            var init_count = document.getElementById("add_counter_value").value;
+            if (init_count === "") {
+                document.getElementById("add_counter_warning").style.display = 'block';
+                return;
+            }
+            // make an ajax post
+            $.ajax({
+                type: "POST",
+                url: "/counters",
+                dataType: "json",
+                data: JSON.stringify({ "uid": localStorage.uId, "uEmail": localStorage.uEmail, "sessionKey": localStorage.sessionKey, "value": init_count }),
+                success: this.addCounterResponse
+            });
+        }
+
+        function addCounterResponse(data) {
+            if (data.mStatus === "ok") {
+                location.reload();
+            } else {
+                console.log("Internal Error");
+            }
+        }
+    </script>
+</html>

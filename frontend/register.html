@@ -1,0 +1,100 @@
+<html>
+    <style>
+        body {background-color: powderblue;}
+        h1{
+            color: blue;
+        }
+        p{
+            color:red;
+        }
+        button{
+            height:50px; 
+            width:100px; 
+        }
+        div{
+            text-align:center;
+        }
+    </style>
+    <head>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <title>Home Page</title>
+    </head>
+
+    <body>
+        <a href=index.html><button id="back">Back</button></a>
+        
+        <div id = "main_body">
+            <h1>Please Register an Account</h1>
+            <label for="register_email">Please Enter Your Email:</label>
+            <input type="text" id="register_email"><br><br>
+            <p style="display: none" id="pwd_warning">Your password does NOT match!!!!!</p>
+            <label for="register_pwd">Please Enter Your Password:</label>
+            <input type="password" id="register_pwd"><br><br>
+            <label for="register_pwd2">Please Re-Enter Your Password:</label>
+            <input type="password" id="register_pwd2"><br><br>
+            <button id="submit" onclick="checkPwd()">Submit</button>
+            <p style="display: none" id="register_warning">Cannot register, please try again later</p>
+            <p style="display: none" id="empty_warning">You must complete all required fields</p>
+            <p style="display: none; color: green" id="register_success">Successfully registered, please go to the <a href="/login.html">login page</a></p>
+        </div>
+    </body>
+
+    <script>
+        function checkPwd(){
+            document.getElementById("register_warning").style.display = 'none';
+            document.getElementById("empty_warning").style.display = 'none';
+            document.getElementById("pwd_warning").style.display = 'none';
+            var uEmail = document.getElementById("register_email").value;
+            var pwd1 = document.getElementById("register_pwd").value;
+            var pwd2 = document.getElementById("register_pwd2").value;
+            if (uEmail === "" || pwd1 === "" || pwd2 === "") {
+                document.getElementById("empty_warning").style.display = 'block';
+                uEmail.value = "";
+                pwd1.value = "";
+                pwd2.value = "";
+                return;
+            }
+            if(pwd1 !== pwd2){
+                document.getElementById("pwd_warning").style.display = 'block';
+                pwd1.value = "";
+                pwd2.value = "";
+                return;
+            }
+            // make an ajax post
+            $.ajax({
+                type: "POST",
+                url: "/register",
+                dataType: "json",
+                data: JSON.stringify({ "uEmail": uEmail, "uPassword": pwd1 }),
+                success: this.registerResponse,
+                error: this.registerError
+            });
+        }
+        
+        function registerResponse(data) {
+            if (data.mStatus === "ok") {
+                document.getElementById("register_success").style.display = 'block';
+            } else if (data.mStatus === "error") {
+                document.getElementById("register_warning").style.display = 'block';
+                document.getElementById("register_email").value = "";
+                document.getElementById("register_pwd").value = "";
+                document.getElementById("register_pwd2").value = "";
+                console.log("The server replied with an error:\n" + data.mpwd);
+            } else {
+                document.getElementById("register_warning").style.display = 'block';
+                document.getElementById("register_email").value = "";
+                document.getElementById("register_pwd").value = "";
+                document.getElementById("register_pwd2").value = "";
+                console.log("Unknown internal error");
+            }
+        }
+
+        function registerError() {
+            document.getElementById("register_warning").style.display = 'block';
+            document.getElementById("register_email").value = "";
+            document.getElementById("register_pwd").value = "";
+            document.getElementById("register_pwd2").value = "";
+        }
+
+    </script>
+</html>
