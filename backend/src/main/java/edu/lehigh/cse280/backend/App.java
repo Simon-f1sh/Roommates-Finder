@@ -13,12 +13,22 @@ import java.util.HashMap;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import java.net.URLConnection;
+
 // Import the Spark package, so that we can make use of the "get" function to 
 // create an HTTP GET route
 import spark.Spark;
 
 public class App 
 {
+    static int getIntFromEnv(String envar, int defaultVal) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get(envar) != null) {
+            return Integer.parseInt(processBuilder.environment().get(envar));
+        }
+        return defaultVal;
+    }
+    
     public static void main(String[] args) {
 
         // gson provides us with a way to turn JSON into objects, and objects
@@ -33,16 +43,8 @@ public class App
         HashMap<String, String> session = new HashMap<String, String>();
         HashMap<String, Integer> link = new HashMap<String, Integer>();
 
-        // Get the Postgres conf from the environment
-        Map<String, String> env = System.getenv();
-        String ip = env.get("POSTGRES_IP");
-        String port = env.get("POSTGRES_PORT");
-        String user = env.get("POSTGRES_USER");
-        String pass = env.get("POSTGRES_PASS");
         
-        // Connect to the database
-        Database db = Database.getDatabase(ip, port, user, pass);
-        db.init();
+        
 
         // Set up the location for serving static files. If the STATIC_LOCATION
         // environment variable is set, we will serve from it. Otherwise, serve
@@ -53,6 +55,17 @@ public class App
         } else {
             Spark.staticFiles.externalLocation(static_location_override);
         }
+
+        
+
+        Spark.port(getIntFromEnv("PORT", 4567));
+        Map<String, String> env = System.getenv();
+        String db_url = env.get("DATABASE_URL");
+
+        Database db = Database.getDatabase(db_url);
+        if (db == null) 
+            return;
+
 
         // Set up a route for serving the main page
         Spark.get("/", (req, res) -> {
@@ -265,4 +278,5 @@ public class App
             return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
         });
     }
+    
 }
