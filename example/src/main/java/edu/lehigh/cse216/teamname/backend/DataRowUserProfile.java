@@ -1,6 +1,5 @@
 package edu.lehigh.cse216.teamname.backend;
 
-import java.util.Date;
 //phase 2 Shenyi Yu
 /**
  * DataRowUserProfile holds a row of information.  A row of information consists of
@@ -29,14 +28,6 @@ public class DataRowUserProfile {
     public String uEmail;
 
     /**
-     * The salt that correlates with the specific password user is using for this row of data
-     */
-    public String uSalt;
-    /**
-     * The password saved for the specific user for this row of data
-     */
-    public String uPassword;
-    /**
      * The introduction user types for this row of data
      */
     public String uIntro;
@@ -58,21 +49,17 @@ public class DataRowUserProfile {
      *
      * @param intro The introduction for this row of data
      */
-    DataRowUserProfile(int uid, String username, String email, String salt, String password, String intro) {
+    DataRowUserProfile(int uid, String username, String email, String intro) {
         uId = uid;
         uSername = username;
         uEmail = email;
-        uSalt = salt;
-        uPassword = password;
         uIntro = intro;
     }
 
-    DataRowUserProfile(int uid, String username, String email, String salt, String password, String intro, String SessionKey) {
+    DataRowUserProfile(int uid, String username, String email, String intro, String SessionKey) {
         uId = uid;
         uSername = username;
         uEmail = email;
-        uSalt = salt;
-        uPassword = password;
         uIntro = intro;
         sessionKey = SessionKey;
     }
@@ -85,8 +72,6 @@ public class DataRowUserProfile {
         // NB: Strings and Dates are immutable, so copy-by-reference is safe
         uSername = data.uSername;
         uEmail = data.uEmail;
-        uSalt = data.uSalt;
-        uPassword = data.uPassword;
         uIntro = data.uIntro;
         sessionKey = data.sessionKey;
     }

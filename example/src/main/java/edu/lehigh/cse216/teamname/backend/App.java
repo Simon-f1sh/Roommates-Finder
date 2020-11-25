@@ -3,8 +3,6 @@ package edu.lehigh.cse216.teamname.backend;
 // Import the Spark package, so that we can make use of the "get" function to 
 // create an HTTP GET route
 
-//import bcrypt do generate salt and hash password
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import spark.Spark;
 
 // Import Google's JSON library
@@ -13,6 +11,7 @@ import com.google.gson.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +20,13 @@ import java.util.Map;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+
+//for google oauth
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 /**
  * For now, our app creates an HTTP server that can only get and add data.
@@ -339,92 +345,107 @@ public class App {
                 }
             }
             return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
+
         });
 
-        /**
-         * phase 2 routes
-         */
 
         /**
-         * phase 2
-         * login with email and password
+         * Modified for phase 3
+         * login with Google Gmail
          * POST route
          */
 
+        /*
+        Spark.post("/callback", (request, response) -> {
+            // Obtain access code from Google
+            String access_code = request.params("code");
+
+            // Exchange access code for token
+            URL token_url = new URL("https://accounts.google.com/o/oauth2/v4/token");
+            String query = "code=" + access_code + "&" +
+                "client_id=689219964832-6m703l22ir6jh9ra1m1lhrgg12bv7olt.apps.googleusercontent.com&" +
+                "client_secret=kHV5Rr_1_dRPTnkDnB2XjPKO&" +
+                "redirect_uri=https%3A%2F%2Farcane-refuge-67249.herokuapp.com%2Flogin&" +
+                "grant_type=authorization_code";
+            try {
+                HttpsURLConnection conn = (HttpsURLConnection)token_url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-length", String.valueOf(query.length()));
+                conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+                conn.setDoOutput(true);
+                // Pass the query to OAuth Server
+                DataOutputStream output = new DataOutputStream(conn.getOutputStream());
+                output.writeBytes(query);
+                output.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return gson.toJson(new StructuredResponse("error", "Encountered exceptions", e));
+            }
+            response.status(200);
+            response.type("application/json");
+            return gson.toJson(new StructuredResponse("ok", "Sent request for access token", null));
+        });
+        */
+
         // POST route for adding a new element to the Database.
-        // This will read JSON from the body of the request,
-        // turn it into a LoginRequest object, extract the user email and password,
-        // insert them, and return if the password is correct.
+        // This will read JSON sent by Google OAuth server,
+        // obtain the access token,
+        // use the token to access user info 
+        // and insert it to our own database.
         Spark.post("/login", (request, response) -> {
             // NB: if gson.Json fails, Spark will reply with status 500 Internal
             // Server Error
+            
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             SecureRandom secureRandom = new SecureRandom();
             int keyBitSize = 256;
             keyGenerator.init(keyBitSize, secureRandom);
             SecretKey secretKey = keyGenerator.generateKey();
-            LoginRequest req = gson.fromJson(request.body(), LoginRequest.class);
+            
+            OAuthRequest req = gson.fromJson(request.body(), OAuthRequest.class);
+            String idTokenString = req.id_token;
             response.status(200);
             response.type("application/json");
-            // modify functions here
-            String email = req.uEmail;
-            String password = req.uPassword;
-            //get salt from db
-            String salt = db.matchPwd(email).uSalt;
-            String hash = BCrypt.hashpw(password, salt);
-            // get base64 encoded version of the key
+
+            // Obtain user's Gmail using the token provided by Google
+            
+            String email;
+
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+                .setAudience(Collections.singletonList("689219964832-6m703l22ir6jh9ra1m1lhrgg12bv7olt.apps.googleusercontent.com"))
+                .build();
+            
+            //for debug
+            if (idTokenString.equals("faketoken")) {
+                email = "yut222@lehigh.edu";
+            } else {
+            GoogleIdToken idToken = verifier.verify(idTokenString);
+            if (idToken != null) {
+                Payload payload = idToken.getPayload();
+                email = payload.getEmail();
+            } else {
+                return gson.toJson(new StructuredResponse("error", "invalid id token", null));
+            }
+            }
+            
+            
+            if (db.matchUsr(email) == null){
+                // We need to create a user
+                int addResult = db.insertRowToUser(email);
+                if (addResult != 1)
+                    return gson.toJson(new StructuredResponse("error", "failed to add user", addResult));
+            }
             String sessionKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-//            String sessionKey = secretKey.toString();
-            DataRowUserProfile userInfo = new DataRowUserProfile(db.matchPwd(email).uId,db.matchPwd(email).uSername, db.matchPwd(email).uEmail, db.matchPwd(email).uSalt, db.matchPwd(email).uPassword, db.matchPwd(email).uIntro, sessionKey);
             session.put(email, sessionKey);
-//            boolean matched = BCrypt.checkpw(password + salt, hash);
-////            System.out.println(matched);
-            if (db.matchPwd(email).uPassword.equals(hash)){
-                    return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
-            }
-            else{
-                return gson.toJson(new StructuredResponse("error", email + " not found", userInfo));
-            }
+            DataRowUserProfile userInfo = new DataRowUserProfile(db.matchUsr(email).uId,db.matchUsr(email).uSername, db.matchUsr(email).uEmail, db.matchUsr(email).uIntro, sessionKey);
+            
+
+            return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
         });
 
         /**
-         * phase 2
-         * update password
-         * PUT route
-         */
-        // PUT route for updating password to the Database.  This will read
-        // JSON from the body of the request, turn it into a LoginRequest
-        // object, extract the user email and password, insert them, and return the
-        // if the password is correct.
-        Spark.put("/:uid/updatepwd", (request, response) -> {
-            // NB: if gson.Json fails, Spark will reply with status 500 Internal
-            // Server Error
-            int idx = Integer.parseInt(request.params("uid"));
-            LoginRequest req = gson.fromJson(request.body(), LoginRequest.class);
-            String sk = req.sessionKey;
-            String em = req.uEmail;
-            String pwd = req.uPassword;
-            String salt = db.matchPwd(em).uSalt;
-            String hash = BCrypt.hashpw(pwd, salt);
-            System.out.println(hash);
-            if (sk.equals(session.get(em))){
-                response.status(200);
-                response.type("application/json");
-                int result = db.uUpdatePwd(idx, salt, hash);
-                if (result == -1) {
-                    return gson.toJson(new StructuredResponse("error", "unable to update password " + idx, null));
-                } else {
-                    return gson.toJson(new StructuredResponse("ok", null, result));
-                }
-            }
-            return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
-
-
-        });
-
-        /**
-         * phase 2
-         * display user profile
+         * phase 3 modified
+         * display user profile and all posts uploaded
          * url/:uid --> user profile: username, email, intro = get, put
          * GET route
          */
@@ -438,15 +459,34 @@ public class App {
                 response.status(200);
                 response.type("application/json");
                 //add new function based on this
-                DataRowUserProfile data = db.uReadOne(idx);
-                if (data == null) {
+                DataRowUserProfile userProfile = db.uReadOne(idx);
+                if (userProfile == null) {
                     return gson.toJson(new StructuredResponse("error", idx + " not found", null));
                 } else {
-                    return gson.toJson(new StructuredResponse("ok", null, data));
+                    return gson.toJson(new StructuredResponse("ok", null, userProfile));
                 }
             }
             return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
 
+        });
+
+        /**
+         * phase 3
+         * display all posts uploaded by a specific user
+         */
+        Spark.post("/:uid/userposts", (request, response) -> {
+            int idx = Integer.parseInt(request.params("uid"));
+            UserProfileRequest req = gson.fromJson(request.body(), UserProfileRequest.class);
+            String sk = req.sessionKey;
+            String em = req.uEmail;
+            if (sk.equals(session.get(em))){
+                // ensure status 200 OK, with a MIME type of JSON
+                response.status(200);
+                response.type("application/json");
+                ArrayList<DataRow> posts = db.readAllByUser(idx);
+                return gson.toJson(new StructuredResponse("ok", null, posts));
+            }
+            return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
         });
 
         /**
@@ -574,7 +614,7 @@ public class App {
 //            // ensure status 200 OK, with a MIME type of JSON
 //            response.status(200);
 //            response.type("application/json");
-//            //TODO: add new function
+//            //TO-DO: add new function
 //            DataRow data = db.readOne(idx);
 //            if (data == null) {
 //                return gson.toJson(new StructuredResponse("error", idx + " not found", null));

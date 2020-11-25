@@ -47,15 +47,17 @@ public class Database {
     //added update user profile
     private PreparedStatement uSelectOne;
     private PreparedStatement uUpdateOne;
-    //added update password
-    private PreparedStatement uUpdatePwd;
-    //check if password matches
-    private PreparedStatement uAuth;
+    private PreparedStatement uInsertOne;
+
+    //try to find a user with specific Gmail
+    private PreparedStatement uGmail;
+
     //added select comments
     private PreparedStatement cSelectAll;
     //added insert comment
     private PreparedStatement cInsertOne;
     private PreparedStatement mSelectAll;
+    private PreparedStatement mSelectAllByUser;
     private PreparedStatement mSelectOne;
     private PreparedStatement mUpdateOne;
 
@@ -112,6 +114,7 @@ public class Database {
             db.mDeleteOne = db.mConnection.prepareStatement("DELETE FROM tblData WHERE mid = ?");
             db.mInsertOne = db.mConnection.prepareStatement("INSERT INTO tblData VALUES (default, ?, ?, ?, ?)");
             db.mSelectAll = db.mConnection.prepareStatement("SELECT mid, subject FROM tblData");
+            db.mSelectAllByUser = db.mConnection.prepareStatement("SELECT mid, subject FROM tblData Where uid = ?");
             db.mSelectOne = db.mConnection.prepareStatement(
                     "SELECT row.*, (SELECT COUNT(*) FROM tblLike WHERE tblLike.mid = row.mid) AS likes, (SELECT COUNT(*) FROM tblDislike WHERE tblDislike.mid = row.mid) AS dislikes FROM (SELECT * from tblData NATURAL JOIN tblUser) AS row WHERE row.mid = ?");
             db.mUpdateOne = db.mConnection.prepareStatement("UPDATE tblData SET subject = ?, message = ? WHERE mid = ?");
@@ -131,9 +134,9 @@ public class Database {
             //tblUser
             //add update user profile for specific user
             db.uUpdateOne = db.mConnection.prepareStatement("UPDATE tblUser SET username = ?, intro = ? WHERE uid = ?");
-            db.uAuth = db.mConnection.prepareStatement("SELECT * from tblUser WHERE email = ?");
-            //add update password for specific user
-            db.uUpdatePwd = db.mConnection.prepareStatement("UPDATE tblUser SET salt = ?, password = ? WHERE uid = ?");
+            db.uInsertOne = db.mConnection.prepareStatement("INSERT INTO tblUser VALUES (default, ?, ?, ?)");
+            db.uGmail = db.mConnection.prepareStatement("SELECT * from tblUser WHERE email = ?");
+            
             //tblComments
             //add get all comments for specific message
             db.cSelectAll = db.mConnection.prepareStatement("SELECT cid, uid, username, text FROM tblComment NATURAL JOIN tblUser where mid = ?");
@@ -286,6 +289,22 @@ public class Database {
                 //phase 2 with more parameters
                 res.add(new DataRow(rs.getInt("mid"), rs.getString("subject")));
 //                res.add(new DataRow(rs.getInt("mid"), rs.getInt("uid"), rs.getString("username"), rs.getString("subject"), rs.getString("message"), rs.getInt("likes"), rs.getInt("dislikes"), rs.getDate("date")));
+            }
+            rs.close();
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<DataRow> readAllByUser(int uid) {
+        ArrayList<DataRow> res = new ArrayList<DataRow>();
+        try {
+            mSelectAllByUser.setInt(1, uid);
+            ResultSet rs = mSelectAllByUser.executeQuery();
+            while (rs.next()) {
+                res.add(new DataRow(rs.getInt("mid"), rs.getString("subject")));
             }
             rs.close();
             return res;
@@ -468,14 +487,36 @@ public class Database {
      *
      * @param email login authorization
      */
+    /*
     public DataRowUserProfile matchPwd(String email) {
         DataRowUserProfile res = null;
         try {
             uAuth.setString(1, email);
             ResultSet rs = uAuth.executeQuery();
             if (rs.next()) {
-                res = new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email"), rs.getString("salt"), rs.getString("password"),rs.getString("intro") );
+                res = new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email"), rs.getString("intro") );
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+    */
+
+    /**
+     * Phase 3
+     * Check if a user with the given Gmail exists
+     * 
+     * @param id
+     * @return
+     */
+    public DataRowUserProfile matchUsr(String email) {
+        DataRowUserProfile res = null;
+        try {
+            uGmail.setString(1, email);
+            ResultSet rs = uGmail.executeQuery();
+            if (rs.next())
+                res = new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email"), rs.getString("intro"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -496,9 +537,9 @@ public class Database {
             ResultSet rs = uSelectOne.executeQuery();
             if (rs.next()) {
                 //modify here
-                //detail: uid, username, email, salt, password, intro
+                //detail: uid, username, email, intro
                 //DataRowUserProfile for user profile!
-                res = new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email"), rs.getString("salt"), rs.getString("password"),rs.getString("intro") );
+                res = new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email"),rs.getString("intro") );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -532,6 +573,28 @@ public class Database {
     }
 
     /**
+     * Phase 3
+     * Add a new user
+     * 
+     * @param email The Gmail address of the new user
+     * 
+     * @return The number of rows that was inserted
+     */
+    public int insertRowToUser(String email) {
+        int count = 0;
+        try {
+            // Use email as default user name
+            uInsertOne.setString(1, email.split("@")[0]);
+            uInsertOne.setString(2, email);
+            uInsertOne.setString(3, "This person is lazy, so nothing's here");
+            count += uInsertOne.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
      * phase 2
      * Update the password of a row in the database
      *
@@ -540,6 +603,7 @@ public class Database {
      * @return a copy of the data in the row, if exists, or null otherwise
      */
     //DONE: need modify the index or add more params.
+    /*
     public int uUpdatePwd(int id, String salt, String password) {
         try {
             uUpdatePwd.setString(1, salt);
@@ -552,4 +616,5 @@ public class Database {
             return -1;
         }
     }
+    */
 }

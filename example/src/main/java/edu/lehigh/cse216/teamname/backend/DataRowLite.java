@@ -1,7 +1,5 @@
 package edu.lehigh.cse216.teamname.backend;
 
-import java.util.Date;
-
 /**
  * DataRowLite is for communicating back a subset of the information in a
  * DataRow.  Specifically, we only send back the id and title.  Note that

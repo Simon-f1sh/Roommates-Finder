@@ -21,4 +21,5 @@ public class LoginRequest {
     public String uSalt;
 
     public String sessionKey;
+
 }

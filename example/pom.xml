@@ -35,6 +35,15 @@
       <version>2.0.2</version>
     </dependency>
 
+    <!--
+      Google API for OAuth
+    -->
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.30.5</version>
+    </dependency>
+
 
 
 

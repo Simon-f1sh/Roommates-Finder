@@ -21,8 +21,15 @@ In phase1:
     StructuredResponseTest.java:
         check the response format
 
-what next phase might work on:
-    the datatype name in DataRow, SimpleRequest, StructuredResponse need to be checked. 
+Google OAuth work flow (phase3):
+    1. Front-end sends an id_token to backend /login
+    2. Backend access user email using the id_token
+    3. Backend checks whether a user with the given email exists in our
+       own database (if not, create a new user) and generates a session
+       key
+    4. Backend sents user info (includes uid, email, session key, etc)
+       back to front-end
+
 
 
 

@@ -17,22 +17,10 @@ public class DataRowLogin {
     public String uEmail;
 
     /**
-     * The password string for this row of data; see DataRow.mTitle
-     */
-    public String uPassword;
-
-    /**
-     * The salt string for this row of data; see DataRow.mTitle
-     */
-    public String uSalt;
-
-    /**
      * Create a DataRowLite by copying fields from a DataRow
      */
     public DataRowLogin(DataRowUserProfile data) {
         this.uId = data.uId;
         this.uEmail = data.uEmail;
-        this.uPassword = data.uPassword;
-        this.uSalt= data.uSalt;
     }
 }

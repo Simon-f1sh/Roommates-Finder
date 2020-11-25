@@ -1,5 +1,7 @@
-target/*
-src/main/resources/*
 .classpath
+.factorypath
 .project
-.settings
+.settings/
+target/
+.vscode/
+src/main/resources

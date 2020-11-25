@@ -1,8 +1,6 @@
 //phase 2 Shenyi Yu
 package edu.lehigh.cse216.teamname.backend;
 
-import java.util.Date;
-
 /**
  * Comment holds a row of information.  A row of information consists of
  * an identifier, strings for a "title" and "content", and a creation date.
