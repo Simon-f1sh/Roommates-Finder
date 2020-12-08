@@ -1,4 +1,6 @@
 <html>
+    <!--meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"-->
+
     <style>
         body {background-color: powderblue;}
         h1{
@@ -9,10 +11,12 @@
         }
         button{
             height:50px; 
-            width:100px; 
+            width:150px; 
         }
-        div{
+        #main_body{
+            margin: auto;
             text-align:center;
+            padding: 100px 0;
         }
     </style>
     <head>
@@ -22,14 +26,12 @@
 
     <body>
         <div id = "main_body">
-            <h1>Welcome to CSE280 Sprint1</h1>
-            <a href=login.html><button id = "login">Login</button></a>
-            <br>
-            <br>
-            <br>
-            <a href=register.html><button id = "signup">Sign Up</button></a>
+            <h1>Please login to continue</h1>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
         
     </body>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 </html>
