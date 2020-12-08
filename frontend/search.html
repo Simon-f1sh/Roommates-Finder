@@ -12,13 +12,12 @@
             width:100px;
         }
 
-        div{
-            text-align:center;
+        .selection{
+            text-align:left;
+            margin-left: 45%;
         }
-        #signOut{
-            position: absolute;
-            top:0;
-            right:0;
+        .header{
+            text-align:right;
         }
     </style>
     <head>
@@ -26,13 +25,13 @@
         <title>Logged in Page</title>
     </head>
     <body>
-        <div>
+        <div class="header">
             <button id="signOut" onclick="signOut();">Sign Out</button>
         </div>
-        <div>
+        <div class="selection">
             <form action="/action_page.php">
-                <label for="quite">Choose Quite Level:</label>
-                <select name="quite_level" id="quite">
+                <label for="tidiness">Choose Tidiness Level:</label>
+                <select name="tidinesslevel" id="tidiness">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -45,8 +44,9 @@
                     <option value="10">10</option>
                 </select>
                 <br>
-                <label for="quite">Choose Clean Level:</label>
-                <select name="Clean_level" id="clean">
+                <br>
+                <label for="noise">Choose Noise Level:</label>
+                <select name="noiselevel" id="noise">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -58,21 +58,44 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
+                <br>
                 <br>
                 <label for="pet">Pet:</label>
-                <select name="Clean_level" id="clean">
+                <select name="pet" id="pet">
                     <option value="1">Friendly</option>
                     <option value="2">Not Friendly</option>
                     <option value="3">Negotiable</option>
                 </select>
                 <br>
-                <label for="pet">Visitor:</label>
+                <br>
+                <label for="visitor">Visitor:</label>
                 <select name="Clean_level" id="clean">
                     <option value="1">Welcomed</option>
-                    <option value="2">Unwelcomed</option>
+                    <option value="2">Welcomed But Not Over Night</option>
+                    <option value="2">Not Welcomed</option>
                     <option value="3">Negotiable</option>
                 </select>
-                <br><br>
+                <br>
+                <br>
+                <label for="sleep">Sleeping Time:</label>
+                <select name="sleeptime" id="sleep">
+                    <option value="1">Before 10</option>
+                    <option value="2">10-12</option>
+                    <option value="3">12-2</option>
+                    <option value="3">After 2</option>
+                </select>
+                <br>
+                <br>
+                <label for="wake">Wake Up Time:</label>
+                <select name="waketime" id="wake">
+                    <option value="1">Before 7</option>
+                    <option value="2">7-9</option>
+                    <option value="3">9-12</option>
+                    <option value="3">After 12</option>
+                </select>
+                <br>
+                <br>
+                <br>
                 <input type="submit" value="Submit">
               </form>
             
