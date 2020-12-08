@@ -20,8 +20,7 @@
         <title>Logged in Page</title>
     </head>
     <body>
-        <a href=index.html><button id="back">Logout</button></a>
-
+        <button onclick="signOut();">Sign Out</button>
         <div id="main_body">
             <!-- JS will automatically generate some context -->
         </div>
@@ -68,6 +67,13 @@
 
         function listCountersResponse(data) {
             // TODO: find a way to list all mData
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
         }
 
         function addCounter() {
