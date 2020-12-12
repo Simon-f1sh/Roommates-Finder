@@ -36,8 +36,17 @@ Frameworks: Spark
 Tools: Postman, NPM
 Libraries: Google's JSON library, Spark
 
-
+Instructions:
+To run our application, below are the API keys, databases, and deploy method needed to run Roomates Finder:
+Database: Postgres
+Interactive UI: JS + HTML + CSS
+Framework: Spark
+3rd party REST API: 
+Google OAuth
+Client ID: 939374055996-8c9s33egqvv3lifjc60eh9lf0r3vvdi3.apps.googleusercontent.com
+Client Secret: a1sneNqPHIbqgZoMmgTJZfUr
+Deploy method: Heroku
 README ( description, etc). 
 instructions of how to install and run your application, 
-and what API keys, databases, etc are needed to run your application. 
+
 You will also provide a link to a live demo of your application.
