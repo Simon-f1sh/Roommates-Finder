@@ -1,0 +1,43 @@
+Application: Roomates Finder
+
+Member Roles: 
+Front-end: Yubo Wang, Wenmin Liu, Yuming Tian
+Backend: Xingchen Liu, Letong Zhang, Shenyi Yu
+
+Functionality:
+User:
+~/login		Login page
+~/profile 	Post user profile
+~/profile/:uid 	Put user profile 
+~/profile 	Get all profile
+~/profile/:uid 	Get user profile
+Admin:
+~/profile/:uid 	delete user account
+
+User Story/Use Case:
+All users must sign up/login to access the app.
+In the app, users will be able to view other user profiles by searching on the main page. 
+The aim is to provide users with a private, safe environment to look for roommates.
+Administrators are authorized to delete accounts with the consideration of protecting the application environment as secured, civilized. 
+For example, user Alicia would like to find a roommate for this semester, she signs up on Roommate Finder and searches on it, users who match her search criteria pop up and she can view their user profile. If she finds one of the user profiles disturbed with violent content, she can email the administrator and the admin will delete the account thoughtfully. 
+
+
+Technical Design:
+Frontend: 
+We will have a welcome page for users to log in or sign up for an account. 
+After they have set up their profile, the user could use the search function on the main page to seek roommates with matching criteria.
+Backend: 
+We will use the Java Spark framework to implement the RestAPI including routes that could sign up or log in with OAuth, 
+update personal profile, retrieve account information based on id, and also accept a search query for seeking roommates. 
+Also, we will design an ER diagram and set up a database on Heroku to store user information, and we could retrieve information with SQL queries.
+
+Tools/Libraries/Frameworks:
+Frameworks: Spark
+Tools: Postman, NPM
+Libraries: Google's JSON library, Spark
+
+
+README ( description, etc). 
+instructions of how to install and run your application, 
+and what API keys, databases, etc are needed to run your application. 
+You will also provide a link to a live demo of your application.
