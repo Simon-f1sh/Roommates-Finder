@@ -1,42 +1,30 @@
 <html>
-    <style>
-        body {background-color: powderblue;}
-        h1{
-            color: blue;
-        }
-        p{
-            color:red;
-        }
-        .selection{
-            text-align:left;
-            margin-left: 45%;
-        }
-        .header{
-            text-align:right;
-        }
-    </style>
     <head>
+        <link rel="stylesheet" href="styles.css">
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <title>Logged in Page</title>
     </head>
     <body>
-        <div class="wrap">
-            <div class="header">
-                <img src="">Img</img>
+        <div class="wrapper">
+            <div class="left">
+                <img src="https://i.imgur.com/cMy8V5j.png" 
+                alt="user" width="100">
                 <br>
                 <button id="signOut" onclick="signOut();">Sign Out</button>
             </div>
-            <div class="selection">
+            <div class="right">
                 <form action="/action_page.php">
                     <label for="gender">Gender:</label>
                     <select name="gender" id="gender">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">Male</option>
                         <option value="2">Female</option>
                     </select>
                     <br>
                     <br>
-                    <label for="tidiness">Choose Tidiness Level:</label>
+                    <label for="tidiness">Tidiness Level:</label>
                     <select name="tidinesslevel" id="tidiness">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -50,8 +38,9 @@
                     </select>
                     <br>
                     <br>
-                    <label for="noise">Choose Noise Level:</label>
+                    <label for="noise">Noise Level:</label>
                     <select name="noiselevel" id="noise">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -67,6 +56,7 @@
                     <br>
                     <label for="pet">Pet:</label>
                     <select name="pet" id="pet">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">Friendly</option>
                         <option value="2">Not Friendly</option>
                         <option value="3">Negotiable</option>
@@ -75,6 +65,7 @@
                     <br>
                     <label for="visitor">Visitor:</label>
                     <select name="Clean_level" id="clean">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">Welcomed</option>
                         <option value="2">Welcomed But Not Over Night</option>
                         <option value="2">Not Welcomed</option>
@@ -84,6 +75,7 @@
                     <br>
                     <label for="sleep">Sleeping Time:</label>
                     <select name="sleeptime" id="sleep">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">Before 10</option>
                         <option value="2">10-12</option>
                         <option value="3">12-2</option>
@@ -93,6 +85,7 @@
                     <br>
                     <label for="wake">Wake Up Time:</label>
                     <select name="waketime" id="wake">
+                        <option value="" selected disabled hidden>Choose here</option>
                         <option value="1">Before 7</option>
                         <option value="2">7-9</option>
                         <option value="3">9-12</option>
@@ -134,9 +127,6 @@
             });
         }
 
-        function listCountersResponse(data) {
-            // TODO: find a way to list all mData
-        }
 
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
@@ -145,28 +135,6 @@
             });
         }
 
-        function addCounter() {
-            var init_count = document.getElementById("add_counter_value").value;
-            if (init_count === "") {
-                document.getElementById("add_counter_warning").style.display = 'block';
-                return;
-            }
-            // make an ajax post
-            $.ajax({
-                type: "POST",
-                url: "/counters",
-                dataType: "json",
-                data: JSON.stringify({ "uid": localStorage.uId, "uEmail": localStorage.uEmail, "sessionKey": localStorage.sessionKey, "value": init_count }),
-                success: this.addCounterResponse
-            });
-        }
 
-        function addCounterResponse(data) {
-            if (data.mStatus === "ok") {
-                location.reload();
-            } else {
-                console.log("Internal Error");
-            }
-        }
     </script>
 </html>
