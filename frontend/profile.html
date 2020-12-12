@@ -1,13 +1,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<meta name="google-signin-client_id" content="939374055996-8c9s33egqvv3lifjc60eh9lf0r3vvdi3.apps.googleusercontent.com">
 <head>
 	<meta charset="UTF-8">
 	<title>User Profile</title>
-	<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
-        <script src="main.js" async defer></script>
+  <script src="main.js" async defer></script>
 </head>
 <body>
   <div class="wrapper">
@@ -15,7 +17,7 @@
       <img src="https://i.imgur.com/cMy8V5j.png" 
       alt="user" width="100">
       <br>
-      <h4>Alex William</h4>
+      <h4 id="p_name">Alex William</h4>
       <br>
       <p>Student</p>
       <br>
@@ -33,6 +35,8 @@
         <button id="open-button" onclick="openForm()">Edit</button>
         <div class="wrapper" id="myForm">
           <form action="/action_page.php" class="form-container">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name">
             <label for="gender">Gender:</label>
             <select name="gender" id="gender">
               <option value="" selected disabled hidden>Choose here</option>
@@ -110,15 +114,17 @@
             <button type="button" class="submit" onclick="closeForm()">Submit</button>
           </form>
         </div>
+
+
         <h3>Profile</h3>
         <div class="info_data">
           <div class="data">
             <h4>Email</h4>
-            <p>alex@gmail.com</p>
+            <p id="p_email"></p>
           </div>
           <div class="data">
-            <h4>Phone</h4>
-            <p>0001-213-998761</p>
+            <h4>Gender</h4>
+            <p id="p_gender"></p>
           </div>
         </div>
       </div>
@@ -127,12 +133,7 @@
         <h3>Biographic</h3>
         <div class="projects_data">
           <div class="data">
-            <h4>Description</h4>
-            <p>xxxxxx.</p>
-          </div>
-          <div class="data">
-            <h4>Most Viewed</h4>
-            <p>xxxxx.</p>
+            <p id="p_bio">xxxxxx.</p>
           </div>
         </div>
       </div>
@@ -141,13 +142,34 @@
 
 </body>
 <script>
-  function closeForm() {
-    console.log("Sending Info");
-    document.getElementById("myForm").style.display = "none";
-    $('#uploadForm').submit(function(e) {
-        e.preventDefault();
-        console.log();
+  window.onLoad();
+
+  function onLoad() {
+    gapi.load('auth2', function () {
+        gapi.auth2.init();
     });
-}
+
+    // make an ajax get
+    $.ajax({
+        type: "GET",
+        url: "/profile/" + localStorage.uId,
+        success: this.pSuccess,
+        error: this.pError
+    });
+  }
+
+  // success
+  function pSuccess(data) {
+    let gender = ['Default','Male','Female'];
+    document.getElementById("p_name").innerHTML = data.mData.uName;
+    document.getElementById("p_email").innerHTML = data.mData.uEmail;
+    document.getElementById("p_gender").innerHTML = gender[data.mData.uGender];
+    document.getElementById("p_bio").innerHTML = data.mData.uHobby;
+  }
+
+  // error
+  function pError() {
+    console.log("Failed to retrieve data from backend");
+  }
 </script>
 </html>
