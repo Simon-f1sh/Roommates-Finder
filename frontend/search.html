@@ -20,7 +20,7 @@
             </div>
             <div class="right">
                 <div class="top">
-                    <form action="/action_page.php">
+                    <form id="searchForm" action="/profile">
                         <label for="gender">Gender:</label>
                         <select name="gender" id="gender">
                             <option value="" selected disabled hidden>Choose here</option>
@@ -30,7 +30,7 @@
                         <br>
                         <br>
                         <label for="tidiness">Tidiness Level:</label>
-                        <select name="tidinesslevel" id="tidiness">
+                        <select name="tidiness" id="tidiness">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -46,7 +46,7 @@
                         <br>
                         <br>
                         <label for="noise">Noise Level:</label>
-                        <select name="noiselevel" id="noise">
+                        <select name="noise" id="noise">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -71,7 +71,7 @@
                         <br>
                         <br>
                         <label for="visitor">Visitor:</label>
-                        <select name="Clean_level" id="clean">
+                        <select name="visitor" id="visitor">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option value="1">Welcomed</option>
                             <option value="2">Welcomed But Not Over Night</option>
@@ -81,7 +81,7 @@
                         <br>
                         <br>
                         <label for="sleep">Sleeping Time:</label>
-                        <select name="sleeptime" id="sleep">
+                        <select name="sleep" id="sleep">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option value="1">Before 10</option>
                             <option value="2">10-12</option>
@@ -91,7 +91,7 @@
                         <br>
                         <br>
                         <label for="wake">Wake Up Time:</label>
-                        <select name="waketime" id="wake">
+                        <select name="wake" id="wake">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option value="1">Before 7</option>
                             <option value="2">7-9</option>
@@ -101,50 +101,13 @@
                         <br>
                         <br>
                         <br>
-                        <button type="submit" form="nameform" value="Submit">Submit</button>
+                        <input id="sumbit" type="submit" value="Submit">
                       </form>
                 </div>
                 <div class="bot">
-                    
+
                 </div>
             </div>
         </div>
-        
-        
-
     </body>
-
-    <script>
-        this.init();
-
-        function init() {
-            if (typeof(Storage) !== "undefined" && localStorage.uEmail && localStorage.uPwd && localStorage.sessionKey) {
-                var user_info = document.createElement("H1");
-                user_info.innerText = "You are logged in as " + localStorage.uEmail;
-                document.getElementById("main_body").appendChild(user_info);
-            } else {
-                console.log("Your browser doesn't support web storage...");
-                return;
-            }
-
-            // make an ajax post
-            $.ajax({
-                type: "POST",
-                url: "/listcounters",
-                dataType: "json",
-                data: JSON.stringify({ "uid": localStorage.uId, "uEmail": localStorage.uEmail, "sessionKey": localStorage.sessionKey }),
-                success: this.listCountersResponse
-            });
-        }
-
-
-        function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-                console.log('User signed out.');
-            });
-        }
-
-
-    </script>
 </html>
