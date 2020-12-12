@@ -101,6 +101,8 @@
               <option value="3">After 12</option>
             </select>
             <br>
+            <label for="hobby">Bio:</label>
+            <input type="text" id="hobby" name="hobby"><br><br>
             <button type="button" class="submit" onclick="closeForm()">Submit</button>
           </form>
         </div>
@@ -130,16 +132,18 @@
           </div>
         </div>
       </div>
-        
-      <div class="social_media">
-        <ul>
-          <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-          <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-      </div>
     </div>
   </div>
 
 </body>
+<script>
+  function closeForm() {
+    console.log("Sending Info");
+    document.getElementById("myForm").style.display = "none";
+    $('#uploadForm').submit(function(e) {
+        e.preventDefault();
+        console.log();
+    });
+}
+</script>
 </html>

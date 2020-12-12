@@ -49,5 +49,17 @@ function openForm(){
 }
   
 function closeForm() {
+    console.log("Sending Info");
     document.getElementById("myForm").style.display = "none";
+    $('#uploadForm').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/echo/json/',
+            data: $(this).serialize(),
+            type: 'POST',
+            success: function(data) {
+                alert(data);
+            }
+        });
+    });
 }
