@@ -43,3 +43,11 @@ function signOut() {
         console.log('User signed out.');
     });
 }
+function openForm(){
+    console.log("edit profile");
+    document.getElementById("myForm").style.display = "block";
+}
+  
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+}

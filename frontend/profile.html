@@ -5,14 +5,12 @@
 	<meta charset="UTF-8">
 	<title>User Profile</title>
 	<link rel="stylesheet" href="styles.css">
-	<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+  <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="main.js" async defer></script>
 </head>
 <body>
-
   <div class="wrapper">
-    <div class="top">
-
-    </div>
     <div class="left">
       <img src="https://i.imgur.com/cMy8V5j.png" 
       alt="user" width="100">
@@ -23,11 +21,88 @@
       <br>
       <br>
       <br>
-      <button id="signOut" onclick="signOut();">Sign Out</button>
+      <button id="signOut" onclick="signOut()">Sign Out</button>
     </div>
 
     <div class="right">
       <div class="info">
+        <button id="open-button" onclick="openForm()">Edit</button>
+        <div class="form-popup" id="myForm">
+          <form action="/action_page.php" class="form-container">
+            <label for="gender">Gender:</label>
+            <select name="gender" id="gender">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+            </select>
+            <br>
+            <label for="tidiness">Tidiness Level:</label>
+            <select name="tidiness" id="tidiness">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+            <br>
+            <label for="noise">Noise Level:</label>
+            <select name="noise" id="noise">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+            <br>
+            <label for="pet">Pet:</label>
+            <select name="pet" id="pet">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">Friendly</option>
+              <option value="2">Not Friendly</option>
+              <option value="3">Negotiable</option>
+            </select>
+            <br>
+            <label for="visitor">Visitor:</label>
+            <select name="visitor" id="visitor">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">Welcomed</option>
+              <option value="2">Welcomed But Not Over Night</option>
+              <option value="2">Not Welcomed</option>
+              <option value="3">Negotiable</option>
+            </select>
+            <br>
+            <label for="sleep">Sleeping Time:</label>
+            <select name="sleep" id="sleep">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">Before 10</option>
+              <option value="2">10-12</option>
+              <option value="3">12-2</option>
+              <option value="3">After 2</option>
+            </select>
+            <br>
+            <label for="wake">Wake Up Time:</label>
+            <select name="wake" id="wake">
+              <option value="" selected disabled hidden>Choose here</option>
+              <option value="1">Before 7</option>
+              <option value="2">7-9</option>
+              <option value="3">9-12</option>
+              <option value="3">After 12</option>
+            </select>
+            <button type="button" class="submit" onclick="closeForm()">Submit</button>
+          </form>
+        </div>
         <h3>Profile</h3>
         <div class="info_data">
           <div class="data">
