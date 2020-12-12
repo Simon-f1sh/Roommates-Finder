@@ -114,7 +114,14 @@ public class Database {
             db.uSelectAll = db.mConnection.prepareStatement("SELECT * from tblUser");
             db.uSelectOne = db.mConnection.prepareStatement("SELECT * from tblUser WHERE uid = ?");
             db.uDeleteOne = db.mConnection.prepareStatement("DELETE FROM tblUser WHERE uid = ?");
-            db.uSelectAllWithQuery = db.mConnection.prepareStatement("SELECT * from tblUser ?");
+            db.uSelectAllWithQuery = db.mConnection
+                    .prepareStatement("SELECT * from tblUser WHERE gender BETWEEN ? AND ? "
+                                                            + "AND tidiness BETWEEN ? AND ? "
+                                                            + "AND noise BETWEEN ? AND ? "
+                                                            + "AND sleep BETWEEN ? AND ? "
+                                                            + "AND wake BETWEEN ? AND ? "
+                                                            + "AND pet BETWEEN ? AND ? "
+                                                            + "AND visitor BETWEEN ? AND ?");
 
 
             /*
@@ -226,11 +233,12 @@ public class Database {
         }
     }
 
-    public ArrayList<DataRowUserProfile> readAll(String where) {
-        System.out.println(where);
+    public ArrayList<DataRowUserProfile> readAll(int values[]) {
         ArrayList<DataRowUserProfile> res = new ArrayList<DataRowUserProfile>();
         try {
-            uSelectAllWithQuery.setString(1, where);
+            for (int i = 0; i < values.length; i++) {
+                uSelectAllWithQuery.setInt(i+1, values[i]);
+            }
             ResultSet rs = uSelectAllWithQuery.executeQuery();
             while (rs.next()) {
                 res.add(new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email")));

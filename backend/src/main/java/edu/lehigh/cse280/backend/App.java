@@ -153,31 +153,33 @@ public class App
                 response.type("application/json");
                 return gson.toJson(new StructuredResponse("ok", null, db.readAll()));
             } else {
-                Iterator<String> it = queryParamSet.iterator();
-                String where = "WHERE ";
-                while (it.hasNext()) {
-                    String param = it.next();
-                    String[] values = request.queryParamsValues(param);
-                    int len = values.length;
-                    where += "(";
-                    for (String value : values) {
-                        where += param;
-                        where += " = ";
-                        where += value;
-                        if (len != 1) {
-                            len--;
-                            where += " OR ";
-                        }
-                    }
-                    where += ")";
-                    if (it.hasNext()) {
-                        where += " AND ";
+                String params[] = {"gender", "tidiness", "noise", "sleep", "wake", "pet", "visitor"};
+                int values[] = {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10};
+                int i = 0;
+                for (String param : params) {
+                    String[] value = request.queryParamsValues(param);
+                    int len = value.length;
+                    if (len == 0) {
+                        i += 2;
+                        continue;
+                    } else if (len == 1) {
+                        values[i++] = Integer.parseInt(value[0]);
+                        values[i++] = Integer.parseInt(value[0]);
+                    } else {
+                        response.status(400);
+                        response.type("application/json");
+                        db.disconnect();
+                        return gson.toJson(new StructuredResponse("error", "Server Shutdown", null));
                     }
                 }
-                ArrayList<DataRowUserProfile> data = db.readAll(where);
+                ArrayList<DataRowUserProfile> data = db.readAll(values);
                 if (data == null) {
+                    response.status(400);
+                    response.type("application/json");
                     return gson.toJson(new StructuredResponse("error", "Nothing Found", null));
                 } else {
+                    response.status(200);
+                    response.type("application/json");
                     return gson.toJson(new StructuredResponse("ok", null, data));
                 }
             }
