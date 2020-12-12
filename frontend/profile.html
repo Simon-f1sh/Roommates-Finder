@@ -27,7 +27,7 @@
     <div class="right">
       <div class="info">
         <button id="open-button" onclick="openForm()">Edit</button>
-        <div class="form-popup" id="myForm">
+        <div class="wrapper" id="myForm">
           <form action="/action_page.php" class="form-container">
             <label for="gender">Gender:</label>
             <select name="gender" id="gender">
@@ -100,6 +100,7 @@
               <option value="3">9-12</option>
               <option value="3">After 12</option>
             </select>
+            <br>
             <button type="button" class="submit" onclick="closeForm()">Submit</button>
           </form>
         </div>
