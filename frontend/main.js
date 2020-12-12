@@ -50,6 +50,7 @@ function signOut() {
     // go to main page
     window.location.href = "/index.html";
 }
+<<<<<<< HEAD
 
 function onLoad() {
     gapi.load('auth2', function () {
@@ -57,13 +58,23 @@ function onLoad() {
     });
 }
 
+=======
+function profile() {
+    window.location.href = "/profile.html";
+}
+function search() {
+    window.location.href = "/search.html";
+}
+>>>>>>> c7ea1370a9c12af61b251219ddb6476331f0aebb
 function openForm(){
     console.log("edit profile");
     document.getElementById("myForm").style.display = "block";
 }
   
 function closeForm() {
+    console.log("Sending Info");
     document.getElementById("myForm").style.display = "none";
+<<<<<<< HEAD
 
     // make an ajax post
     $.ajax({
@@ -74,5 +85,17 @@ function closeForm() {
         data: JSON.stringify({  }),
         success: this.loginResponse,
         error: this.loginError
+=======
+    $('#uploadForm').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/echo/json/',
+            data: $(this).serialize(),
+            type: 'POST',
+            success: function(data) {
+                alert(data);
+            }
+        });
+>>>>>>> c7ea1370a9c12af61b251219ddb6476331f0aebb
     });
 }
