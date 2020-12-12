@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.google.gson.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Base64;
 import java.util.HashMap;
 
@@ -72,7 +73,7 @@ public class App
         Database db = Database.getDatabase(db_url);
         if (db == null) 
             return;
-
+        db.init();
 
         // Set up a route for serving the main page
         Spark.get("/", (req, res) -> {
@@ -88,7 +89,9 @@ public class App
             int keyBitSize = 256;
             keyGenerator.init(keyBitSize, secureRandom);
             SecretKey secretKey = keyGenerator.generateKey();
+
             LoginRequest req = gson.fromJson(request.body(), LoginRequest.class);
+            String idTokenString = req.id_token;
             response.status(200);
             response.type("application/json");
 
@@ -124,14 +127,15 @@ public class App
             return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
         });
 
-        Spark.put("/profile", (request, response) -> {
+        Spark.put("/profile/:uid", (request, response) -> {
             // NB: if gson.Json fails, Spark will reply with status 500 Internal 
             // Server Error
+            int uid = Integer.parseInt(request.params("uid"));
             SimpleRequest req = gson.fromJson(request.body(), SimpleRequest.class);
             response.status(200);
             response.type("application/json");
             //原本用的是createEntry但因为我们只有一个uTable所以是updateOne
-            int returnId = db.updateOne(req.uid, req.uName, req.uGender, req.uTidiness, req.uNoise, req.uSleepTime, req.uWakeTime, req.uPet, req.uVisitor, req.uHobby);
+            int returnId = db.updateOne(uid, req.uName, req.uGender, req.uTidiness, req.uNoise, req.uSleepTime, req.uWakeTime, req.uPet, req.uVisitor, req.uHobby);
             if (returnId == -1) {
                 return gson.toJson(new StructuredResponse("error", "error in inserting detail info", null));
             } else {
@@ -141,9 +145,14 @@ public class App
         });
 
         Spark.get("/profile", (request, response) -> {
-            response.status(200);
-            response.type("application/json");
-            return gson.toJson(new StructuredResponse("ok", null, db.readAll()));
+            String search = request.queryParamsValues("search")
+            if (!search) {
+                response.status(200);
+                response.type("application/json");
+                return gson.toJson(new StructuredResponse("ok", null, db.readAll()));
+            } else {
+                
+            }
         });
 
         // read user profile
@@ -153,7 +162,7 @@ public class App
             response.status(200);
             response.type("application/json");
             SimpleRequest req = gson.fromJson(request.body(), SimpleRequest.class);
-            DataRow data = db.readOne(mid);
+            DataRow data = db.readOne(uid);
             if (data == null) {
                 return gson.toJson(new StructuredResponse("error", uid + " not found", null));
             } else {

@@ -9,16 +9,7 @@ package edu.lehigh.cse280.backend;
  */
 public class LoginRequest {
     /**
-     * The email being provided by the client.
+     * The short-lifed access token returned from Google
      */
-    public String uEmail;
-
-    /**
-     * The password being provided by the client.
-     */
-    public String uPassword;
-
-    public String uSalt;
-
-    public String sessionKey;
+    public String id_token;
 }
