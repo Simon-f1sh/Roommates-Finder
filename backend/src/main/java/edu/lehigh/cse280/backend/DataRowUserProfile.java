@@ -21,23 +21,14 @@ public class DataRowUserProfile {
     /**
      * The username for this row of data
      */
-    public String uSername;
+    public String uName;
 
     /**
      * The email address for this row of data
      */
     public String uEmail;
 
-    /**
-     * The salt that correlates with the specific password user is using for this row of data
-     */
-    public String uSalt;
-    /**
-     * The password saved for the specific user for this row of data
-     */
-    public String uPassword;
 
-    public String sessionKey;
     /**
      * Create a new DataRowUserProfile with the provided user id and parameters,
      *
@@ -47,28 +38,11 @@ public class DataRowUserProfile {
      * @param username The username string for this row of data
      * 
      * @param email The email string for this row of data
-     *
-     * @param salt The salt related to the password for this row of data
-     *
-     * @param password The password for this row of data
-     *
-     * @param intro The introduction for this row of data
      */
-    DataRowUserProfile(int uid, String username, String email, String salt, String password) {
+    DataRowUserProfile(int uid, String username, String email) {
         uId = uid;
-        uSername = username;
+        uName = username;
         uEmail = email;
-        uSalt = salt;
-        uPassword = password;
-    }
-
-    DataRowUserProfile(int uid, String username, String email, String salt, String password, String SessionKey) {
-        uId = uid;
-        uSername = username;
-        uEmail = email;
-        uSalt = salt;
-        uPassword = password;
-        sessionKey = SessionKey;
     }
 
     /**
@@ -77,10 +51,7 @@ public class DataRowUserProfile {
     DataRowUserProfile(DataRowUserProfile data) {
         uId = data.uId;
         // NB: Strings and Dates are immutable, so copy-by-reference is safe
-        uSername = data.uSername;
+        uName = data.uName;
         uEmail = data.uEmail;
-        uSalt = data.uSalt;
-        uPassword = data.uPassword;
-        sessionKey = data.sessionKey;
     }
 }

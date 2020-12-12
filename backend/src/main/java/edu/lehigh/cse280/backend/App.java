@@ -19,6 +19,13 @@ import java.net.URLConnection;
 // create an HTTP GET route
 import spark.Spark;
 
+//for google oauth
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+
 public class App 
 {
     static int getIntFromEnv(String envar, int defaultVal) {
@@ -40,7 +47,7 @@ public class App
         // https://stackoverflow.com/questions/10380835/is-it-ok-to-use-gson-instance-as-a-static-field-in-a-model-bean-reuse
         final Gson gson = new Gson();
 
-        HashMap<String, String> session = new HashMap<String, String>();
+        //HashMap<String, String> session = new HashMap<String, String>();
         HashMap<String, Integer> link = new HashMap<String, Integer>();
 
         
@@ -84,27 +91,105 @@ public class App
             LoginRequest req = gson.fromJson(request.body(), LoginRequest.class);
             response.status(200);
             response.type("application/json");
-            // modify functions here
-            String email = req.uEmail;
-            String password = req.uPassword;
-            //get salt from db
-            String salt = db.matchPwd(email).uSalt;
-            String hash = BCrypt.hashpw(password, salt);
-            // get base64 encoded version of the key
-            String sessionKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-//            String sessionKey = secretKey.toString();
-            DataRowUserProfile userInfo = new DataRowUserProfile(db.matchPwd(email).uId, db.matchPwd(email).uSername, db.matchPwd(email).uEmail, db.matchPwd(email).uSalt, db.matchPwd(email).uPassword, sessionKey);
-            session.put(email, sessionKey);
-//            boolean matched = BCrypt.checkpw(password + salt, hash);
-////            System.out.println(matched);
-            if (db.matchPwd(email).uPassword.equals(hash)){
-                    return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
+
+            // Google OAuth
+            String email;
+
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+                .setAudience(Collections.singletonList("939374055996-8c9s33egqvv3lifjc60eh9lf0r3vvdi3.apps.googleusercontent.com"))
+                .build();
+            
+            //for debug
+            if (idTokenString.equals("faketoken")) {
+                email = "yut222@lehigh.edu";
+            } else {
+                GoogleIdToken idToken = verifier.verify(idTokenString);
+                if (idToken != null) {
+                    Payload payload = idToken.getPayload();
+                    email = payload.getEmail();
+                } else {
+                    return gson.toJson(new StructuredResponse("error", "invalid id token", null));
+                }
             }
-            else{
-                return gson.toJson(new StructuredResponse("error", email + " not found", userInfo));
+            
+            if (db.matchUsr(email) == null){
+                // We need to create a user
+                int addResult = db.insertRowToUser(email);
+                if (addResult != 1)
+                    return gson.toJson(new StructuredResponse("error", "failed to add user", addResult));
+            }
+            //String sessionKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+            //session.put(email, sessionKey);
+            DataRowUserProfile userInfo = new DataRowUserProfile(db.matchUsr(email).uId,db.matchUsr(email).uName, db.matchUsr(email).uEmail);
+            return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
+        });
+
+        Spark.put("/profile", (request, response) -> {
+            // NB: if gson.Json fails, Spark will reply with status 500 Internal 
+            // Server Error
+            SimpleRequest req = gson.fromJson(request.body(), SimpleRequest.class);
+            response.status(200);
+            response.type("application/json");
+            //原本用的是createEntry但因为我们只有一个uTable所以是updateOne
+            int returnId = db.updateOne(req.uid, req.uName, req.uGender, req.uTidiness, req.uNoise, req.uSleepTime, req.uWakeTime, req.uPet, req.uVisitor, req.uHobby);
+            if (returnId == -1) {
+                return gson.toJson(new StructuredResponse("error", "error in inserting detail info", null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", "" + returnId, null));
+            }
+
+        });
+
+        Spark.get("/profile", (request, response) -> {
+            response.status(200);
+            response.type("application/json");
+            return gson.toJson(new StructuredResponse("ok", null, db.readAll()));
+        });
+
+        // read user profile
+        Spark.get("/profile/:uid", (request, response) -> {
+            int uid = Integer.parseInt(request.params("uid"));
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            SimpleRequest req = gson.fromJson(request.body(), SimpleRequest.class);
+            DataRow data = db.readOne(mid);
+            if (data == null) {
+                return gson.toJson(new StructuredResponse("error", uid + " not found", null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", null, data));
             }
         });
 
+        Spark.delete("/profile/:uid", (request, response) -> {
+            // If we can't get an ID, Spark will sned a status 500
+            int uid = Integer.parseInt(request.params("uid"));
+            SimpleRequest req = gson.fromJson(request.body(), SimpleRequest.class);
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            boolean result = db.deleteOne(uid);
+            if (!result) {
+                return gson.toJson(new StructuredResponse("error", "unable to delete user" + uid, null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", null, null));
+            }
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        //这部分应该不需要了，但留着以防万一
         Spark.post("/register", (request, response) -> {
             // NB: if gson.Json fails, Spark will reply with status 500 Internal
             // Server Error
@@ -277,6 +362,7 @@ public class App
             }
             return gson.toJson(new StructuredResponse("error", "session key not correct..", null));
         });
+        */
     }
     
 }

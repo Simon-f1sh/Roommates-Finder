@@ -16,11 +16,17 @@ public class DataRow {
      * The unique identifier associated with this element.  It's final, because
      * we never want to change it.
      */
-    public final int cId;
-    public int uId;
-
-    public int cValue;
-
+    public final int uid;
+    public String uName;
+    public String uEmail;
+    public int uGender;
+    public int uTidiness;
+    public int uNoise;
+    public int uSleepTime;
+    public int uWakeTime;
+    public int uPet;
+    public int uVisitor;
+    public String uHobby;
 
     /**
      * Create a new DataRow with the provided id and title/content, and a 
@@ -34,10 +40,18 @@ public class DataRow {
      *
      * @param content The content string for this row of data
      */
-    DataRow(int cid, int uid, int value) {
-        cId = cid;
-        uId = uid;
-        cValue = value;
+    DataRow(int id, String username, String email, int gender, int tidiness, int noise, int sleep, int wake, int pet, int visitor, String hobby) {
+        uid = id;
+        uName = username;
+        uEmail = email;
+        uGender = gender;
+        uTidiness = tidiness;
+        uNoise = noise;
+        uSleepTime = sleep;
+        uWakeTime = wake;
+        uPet = pet;
+        uVisitor = visitor;
+        uHobby = hobby;
     }
 
 
@@ -46,8 +60,16 @@ public class DataRow {
      * Copy constructor to create one data row from another
      */
     DataRow(DataRow data) {
-        cId = data.cId;
-        uId = data.uId;
-        cValue = data.cValue;
+        uid = data.uid;
+        uName = data.uName;
+        uEmail = data.uEmail;
+        uGender = data.uGender;
+        uTidiness = data.uTidiness;
+        uNoise = data.uNoise;
+        uSleepTime = data.uSleepTime;
+        uWakeTime = data.uWakeTime;
+        uPet = data.uPet;
+        uVisitor = data.uVisitor;
+        uHobby = data.uHobby;
     }
 }
