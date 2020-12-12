@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>User Profile</title>
+	<link rel="stylesheet" href="styles.css">
+	<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+</head>
+<body>
+
+  <div class="wrapper">
+    <div class="top">
+
+    </div>
+    <div class="left">
+      <img src="https://i.imgur.com/cMy8V5j.png" 
+      alt="user" width="100">
+      <br>
+      <h4>Alex William</h4>
+      <br>
+      <p>Student</p>
+      <br>
+      <br>
+      <br>
+      <button id="signOut" onclick="signOut();">Sign Out</button>
+    </div>
+    
+    <div class="right">
+      <div class="info">
+        <h3>Profile</h3>
+        <div class="info_data">
+          <div class="data">
+            <h4>Email</h4>
+            <p>alex@gmail.com</p>
+          </div>
+          <div class="data">
+            <h4>Phone</h4>
+            <p>0001-213-998761</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="projects">
+        <h3>Biographic</h3>
+        <div class="projects_data">
+          <div class="data">
+            <h4>Description</h4>
+            <p>xxxxxx.</p>
+          </div>
+          <div class="data">
+            <h4>Most Viewed</h4>
+            <p>xxxxx.</p>
+          </div>
+        </div>
+      </div>
+        
+      <div class="social_media">
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+          <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script>
+  function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+</script>
+</html>
