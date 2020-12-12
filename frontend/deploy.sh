@@ -1,6 +1,10 @@
-mkdir ../backend/src/main/resources/web
+if [ ! -d ../backend/src/main/resources ]; then 
+    mkdir ../backend/src/main/resources
+fi
+if [ ! -d ../backend/src/main/resources/web ]; then
+    mkdir ../backend/src/main/resources/web
+fi
 cp ./index.html ../backend/src/main/resources/web/index.html
-cp ./login.html ../backend/src/main/resources/web/login.html
-cp ./loggedin.html ../backend/src/main/resources/web/loggedin.html
-cp ./register.html ../backend/src/main/resources/web/register.html
-cp -r ./node_modules ../backend/src/main/resources/web/node_modules/
+cp ./search.html ../backend/src/main/resources/web/search.html
+cp ./profile.html ../backend/src/main/resources/web/profile.html
+cp -r ./node_modules ../backend/src/main/resources/web/.
