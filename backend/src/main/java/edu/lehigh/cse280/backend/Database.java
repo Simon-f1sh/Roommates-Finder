@@ -30,6 +30,7 @@ public class Database {
     private PreparedStatement uSelectAll;
     private PreparedStatement uSelectOne;
     private PreparedStatement uDeleteOne;
+    private PreparedStatement uSelectAllWithQuery;
 
     /*
     private PreparedStatement cCreateTable;
@@ -113,7 +114,7 @@ public class Database {
             db.uSelectAll = db.mConnection.prepareStatement("SELECT * from tblUser");
             db.uSelectOne = db.mConnection.prepareStatement("SELECT * from tblUser WHERE uid = ?");
             db.uDeleteOne = db.mConnection.prepareStatement("DELETE FROM tblUser WHERE uid = ?");
-
+            db.uSelectAllWithQuery = db.mConnection.prepareStatement("SELECT * from tblUser ?");
 
 
             /*
@@ -216,6 +217,22 @@ public class Database {
                 //readAll只需要显示uID uName和uEmail，所以用DataRowUserProfile足够了
                 res.add(new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email")));
 //                res.add(new DataRow(rs.getInt("mid"), rs.getInt("uid"), rs.getString("username"), rs.getString("subject"), rs.getString("message"), rs.getInt("likes"), rs.getInt("dislikes"), rs.getDate("date")));
+            }
+            rs.close();
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<DataRowUserProfile> readAll(String where) {
+        ArrayList<DataRowUserProfile> res = new ArrayList<DataRowUserProfile>();
+        try {
+            uSelectAllWithQuery.setString(1, where);
+            ResultSet rs = uSelectAllWithQuery.executeQuery();
+            while (rs.next()) {
+                res.add(new DataRowUserProfile(rs.getInt("uid"), rs.getString("username"), rs.getString("email")));
             }
             rs.close();
             return res;

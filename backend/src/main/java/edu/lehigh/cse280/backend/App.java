@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -145,13 +147,40 @@ public class App
         });
 
         Spark.get("/profile", (request, response) -> {
-            String search = request.queryParamsValues("search")
-            if (!search) {
+            Set<String> queryParamSet = request.queryParams();
+            if (queryParamSet.isEmpty()) {
                 response.status(200);
                 response.type("application/json");
                 return gson.toJson(new StructuredResponse("ok", null, db.readAll()));
             } else {
-                
+                Iterator<String> it = queryParamSet.iterator();
+                String where = "WHERE ";
+                boolean flag;
+                while (flag = it.hasNext()) {
+                    String param = it.next();
+                    String[] values = request.queryParamsValues(param);
+                    int len = values.length;
+                    where += "(";
+                    for (String value : values) {
+                        where += param;
+                        where += " = ";
+                        where += value;
+                        if (len != 1) {
+                            len--;
+                            where += " OR ";
+                        }
+                    }
+                    where += ")";
+                    if (flag) {
+                        where += " AND ";
+                    }
+                }
+                ArrayList<DataRowUserProfile> data = db.readAll(where);
+                if (data == null) {
+                    return gson.toJson(new StructuredResponse("error", "Nothing Found", null));
+                } else {
+                    return gson.toJson(new StructuredResponse("ok", null, data));
+                }
             }
         });
 
