@@ -1,21 +1,46 @@
 <html>
-    <!--meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"-->
     <meta name="google-signin-client_id" content="939374055996-8c9s33egqvv3lifjc60eh9lf0r3vvdi3.apps.googleusercontent.com">
     <head>
-        <!-- <script src="bootstrap.min.js"></script> -->
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            body {
+                background: linear-gradient(to right,#01a9ac,#4a86e8);
+            }
+
+            .wrapper {
+                top: 38%;
+                box-shadow: 0 0px 0px 0;
+            }
+
+            .wrapper .center{
+                width: 100%;
+                padding: 30px 25px;
+                text-align: center;
+                color: #fff;
+            }
+            .g-signin2{
+                width: 100%;
+            }
+
+            .g-signin2 > div{
+                margin: 0 auto;
+            }
+        </style>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="main.js" async defer></script>
         <title>Home Page</title>
     </head>
 
     <body>
-        <div id = "main_body">
-            <h1>Please login to continue</h1>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div class="wrapper">
+            <div class="center">
+                <h1>Please login to continue</h1>
+                <br>
+                <div class="g-signin2" data-onsuccess="onSignIn" style="margin: auto">button</div>
+            </div>
         </div>
         
     </body>
-
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="main.js" async defer></script>
 
 </html>
