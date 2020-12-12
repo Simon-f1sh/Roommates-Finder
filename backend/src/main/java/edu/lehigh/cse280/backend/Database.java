@@ -227,6 +227,7 @@ public class Database {
     }
 
     public ArrayList<DataRowUserProfile> readAll(String where) {
+        System.out.println(where);
         ArrayList<DataRowUserProfile> res = new ArrayList<DataRowUserProfile>();
         try {
             uSelectAllWithQuery.setString(1, where);

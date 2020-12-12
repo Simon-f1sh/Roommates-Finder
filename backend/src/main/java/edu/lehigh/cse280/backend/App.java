@@ -155,8 +155,7 @@ public class App
             } else {
                 Iterator<String> it = queryParamSet.iterator();
                 String where = "WHERE ";
-                boolean flag;
-                while (flag = it.hasNext()) {
+                while (it.hasNext()) {
                     String param = it.next();
                     String[] values = request.queryParamsValues(param);
                     int len = values.length;
@@ -171,7 +170,7 @@ public class App
                         }
                     }
                     where += ")";
-                    if (flag) {
+                    if (it.hasNext()) {
                         where += " AND ";
                     }
                 }
