@@ -56,7 +56,7 @@ public class Database {
             // cCreateTable.execute();
         } catch(Exception e) {
             e.printStackTrace();
-            disconnect();
+            //disconnect();
         }
     }
 

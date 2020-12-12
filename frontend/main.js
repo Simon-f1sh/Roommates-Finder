@@ -1,3 +1,5 @@
+window.onLoad();
+
 function onSignIn(googleUser) {
     //var profile = googleUser.getBasicProfile();
     var id_token = googleUser.getAuthResponse().id_token;
@@ -23,7 +25,7 @@ function loginResponse(data) {
             return;
         }
         // go to search page
-        window.location.href = "/search.html";
+        window.location.href = "/profile.html";
     } else if (data.mStatus === 'error') {
         loginError();
         console.log("The server replied with an error");
@@ -37,12 +39,24 @@ function loginError() {
     localStorage.uId = 0;
     localStorage.sessionKey = 0;
 }
+
 function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
         console.log('User signed out.');
+        auth2.disconnect();
+    });
+    auth2.disconnect();
+    // go to main page
+    window.location.href = "/index.html";
+}
+
+function onLoad() {
+    gapi.load('auth2', function () {
+        gapi.auth2.init();
     });
 }
+
 function openForm(){
     console.log("edit profile");
     document.getElementById("myForm").style.display = "block";
@@ -50,4 +64,15 @@ function openForm(){
   
 function closeForm() {
     document.getElementById("myForm").style.display = "none";
+
+    // make an ajax post
+    $.ajax({
+        type: "POST",
+        url: "/profile/" + localStorage.uId,
+        dataType: "json",
+        // uid, req.uName, req.uGender, req.uTidiness, req.uNoise, req.uSleepTime, req.uWakeTime, req.uPet, req.uVisitor, req.uHobby
+        data: JSON.stringify({  }),
+        success: this.loginResponse,
+        error: this.loginError
+    });
 }
