@@ -14,7 +14,7 @@
                 <img src="https://www.lehighvalleylive.com/resizer/Kw59mLwe1L4Vn55E3EpFu0tcrMM=/1280x0/smart/advancelocal-adapter-image-uploads.s3.amazonaws.com/image.lehighvalleylive.com/home/lvlive-media/width2048/img/lehigh_impact/photo/lehigh-university-logo-4e1130167f796fe2.jpg" 
                 alt="user" width="100">
                 <br>
-                <h4>Alex William</h4>
+                <h4 id="s_name">Alex William</h4>
                 <br>
                 <p>Student</p>
                 <br>
@@ -130,4 +130,26 @@
             </div>
         </div>
     </body>
+
+    <script>
+        window.onLoad();
+
+        function onLoad() {
+        gapi.load('auth2', function () {
+            gapi.auth2.init();
+        });
+
+        // make an ajax get
+        $.ajax({
+            type: "GET",
+            url: "/profile/" + localStorage.uId,
+            success: function(data) {
+                document.getElementById("s_name").innerHTML = data.mData.uName;
+            },
+            error: function() {
+                console.log("failed to retrieve user info")
+            }
+        });
+        }
+    </script>
 </html>

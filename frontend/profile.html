@@ -151,27 +151,27 @@
         gapi.auth2.init();
     });
 
+    if (localStorage.target_uId !== localStorage.uId) {
+      document.getElementById("open-button").style.display = "none";
+    } else {
+      document.getElementById("open-button").style.display = "block";
+    }
+
     // make an ajax get
     $.ajax({
         type: "GET",
-        url: "/profile/" + localStorage.uId,
-        success: this.pSuccess,
-        error: this.pError
+        url: "/profile/" + localStorage.target_uId,
+        success: function(data) {
+          let gender = ['Default','Male','Female'];
+          document.getElementById("p_name").innerHTML = data.mData.uName;
+          document.getElementById("p_email").innerHTML = data.mData.uEmail;
+          document.getElementById("p_gender").innerHTML = gender[data.mData.uGender];
+          document.getElementById("p_bio").innerHTML = data.mData.uHobby;
+        },
+        error: function() {
+          console.log("Failed to retrieve data from backend");
+        }
     });
-  }
-
-  // success
-  function pSuccess(data) {
-    let gender = ['Default','Male','Female'];
-    document.getElementById("p_name").innerHTML = data.mData.uName;
-    document.getElementById("p_email").innerHTML = data.mData.uEmail;
-    document.getElementById("p_gender").innerHTML = gender[data.mData.uGender];
-    document.getElementById("p_bio").innerHTML = data.mData.uHobby;
-  }
-
-  // error
-  function pError() {
-    console.log("Failed to retrieve data from backend");
   }
 </script>
 </html>

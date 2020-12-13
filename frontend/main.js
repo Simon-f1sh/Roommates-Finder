@@ -58,6 +58,7 @@ function onLoad() {
 }
 
 function profile() {
+    localStorage.target_uId = localStorage.uId;
     window.location.href = "/profile.html";
 }
 function search() {
@@ -82,14 +83,20 @@ function searchRes() {
         success: function(data) {
             // append info
             let searchResult = document.getElementById("searchResult").getElementsByTagName("tbody")[0];
-            for (let i = 0; i < len(data.mData); i++) {
+            for (let i = 0; i < data.mData.length; i++) {
                 let newRow = document.createElement("tr");
                 let newName = document.createElement("td");
                 let newEmail = document.createElement("td");
                 let newBio = document.createElement("td");
+                let detail = document.createElement("td");
+                let detal_button = document.createElement("button");
                 newName.innerHTML = data.mData[i].uName;
                 newEmail.innerHTML = data.mData[i].uEmail;
                 newBio.innerHTML = "Need to obtain data from backend";
+                detail_button.onclick = function() {
+                    localStorage.target_uId = data.mData[i].uId;
+                    window.location.href = "profile.html";
+                };
                 newRow.appendChild(newName);
                 newRow.appendChild(newEmail);
                 newRow.appendChild(newBio);
