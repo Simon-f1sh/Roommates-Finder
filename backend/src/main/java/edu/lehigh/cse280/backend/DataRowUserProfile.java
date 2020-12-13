@@ -28,6 +28,8 @@ public class DataRowUserProfile {
      */
     public String uEmail;
 
+    public int uAdmin;
+
 
     /**
      * Create a new DataRowUserProfile with the provided user id and parameters,
@@ -45,6 +47,13 @@ public class DataRowUserProfile {
         uEmail = email;
     }
 
+    DataRowUserProfile(int uid, String username, String email, int admin) {
+        uId = uid;
+        uName = username;
+        uEmail = email;
+        uAdmin = admin;
+    }
+
     /**
      * Copy constructor to create one DataRowUserProfile from another
      */
@@ -53,5 +62,6 @@ public class DataRowUserProfile {
         // NB: Strings and Dates are immutable, so copy-by-reference is safe
         uName = data.uName;
         uEmail = data.uEmail;
+        uAdmin = data.uAdmin;
     }
 }

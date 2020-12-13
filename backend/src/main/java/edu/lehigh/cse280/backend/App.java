@@ -105,7 +105,9 @@ public class App
                 .build();
             
             //for debug
+            int admin = 0;
             if (idTokenString.equals("faketoken")) {
+                admin = 1;
                 email = "yut222@lehigh.edu";
             } else {
                 GoogleIdToken idToken = verifier.verify(idTokenString);
@@ -119,14 +121,13 @@ public class App
             
             if (db.matchUsr(email) == null){
                 // We need to create a user
-                int addResult = db.insertRowToUser(email);
+                int addResult = db.insertRowToUser(email, admin);
                 if (addResult != 1)
                     return gson.toJson(new StructuredResponse("error", "failed to add user", addResult));
             }
             //String sessionKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
             //session.put(email, sessionKey);
-            DataRowUserProfile userInfo = new DataRowUserProfile(db.matchUsr(email).uId,db.matchUsr(email).uName, db.matchUsr(email).uEmail);
-            return gson.toJson(new StructuredResponse("ok", "Login success!", userInfo));
+            return gson.toJson(new StructuredResponse("ok", "Login success!", db.matchUsr(email)));
         });
 
         Spark.put("/profile/:uid", (request, response) -> {
