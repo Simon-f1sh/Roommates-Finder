@@ -17,7 +17,7 @@
       <img src="https://www.lehighvalleylive.com/resizer/Kw59mLwe1L4Vn55E3EpFu0tcrMM=/1280x0/smart/advancelocal-adapter-image-uploads.s3.amazonaws.com/image.lehighvalleylive.com/home/lvlive-media/width2048/img/lehigh_impact/photo/lehigh-university-logo-4e1130167f796fe2.jpg" 
       alt="user" width="100">
       <br>
-      <h4 id="p_name">Alex William</h4>
+      <h4 id="p_name"></h4>
       <br>
       <p>Student</p>
       <br>
@@ -33,6 +33,7 @@
     <div class="right">
       <div class="info">
         <button id="open-button" onclick="openForm()">Edit</button>
+        <button id="delete-button" onclick="deleteUser()">Delete</button>
         <div class="wrapper" id="myForm">
           <form action="/action_page.php" class="form-container">
             <label for="name">Name:</label>
@@ -151,10 +152,17 @@
         gapi.auth2.init();
     });
 
+    if (localStorage.isAdmin === "true") {
+      document.getElementById("delete-button").style.display = "block";
+    } else {
+      document.getElementById("delete-button").style.display = "none";
+    }
+
     if (localStorage.target_uId !== localStorage.uId) {
       document.getElementById("open-button").style.display = "none";
     } else {
       document.getElementById("open-button").style.display = "block";
+      document.getElementById("delete-button").style.display = "none";
     }
 
     // make an ajax get

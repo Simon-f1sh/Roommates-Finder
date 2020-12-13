@@ -14,7 +14,7 @@
                 <img src="https://www.lehighvalleylive.com/resizer/Kw59mLwe1L4Vn55E3EpFu0tcrMM=/1280x0/smart/advancelocal-adapter-image-uploads.s3.amazonaws.com/image.lehighvalleylive.com/home/lvlive-media/width2048/img/lehigh_impact/photo/lehigh-university-logo-4e1130167f796fe2.jpg" 
                 alt="user" width="100">
                 <br>
-                <h4 id="s_name">Alex William</h4>
+                <h4 id="s_name"></h4>
                 <br>
                 <p>Student</p>
                 <br>
@@ -29,6 +29,7 @@
             </div>
             <div class="right">
                 <div class="top">
+                    <p id="warning" style="color: red; display: none">Please select everything</p>
                     <form id="searchForm" action="/profile">
                         <label for="gender">Gender:</label>
                         <select name="gender" id="gender" required>
@@ -110,18 +111,18 @@
                         <br>
                         <br>
                         <br>
-                        <button type="button" class="submit" onclick="searchRes()">Submit</button>
+                        <button type="button" class="submit" onclick="searchRes()">Search</button>
                       </form>
                 </div>
             </div>
-            <div class="right" id="searchResultWraper" style="display: none">
+            <div class="right" id="searchResultWrapper" style="display: none">
                 <h3>Searching Results</h3>
-                <table id="searchResult">
+                <table id="searchResult" style="display: inline-block; overflow: auto">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Bio</th>
+                            <th>Profile</th>
                         </tr>
                     </thead>
                     <tbody>
