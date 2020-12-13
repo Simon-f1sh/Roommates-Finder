@@ -157,19 +157,19 @@ public class App
                 int values[] = {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10};
                 int i = 0;
                 for (String param : params) {
-                    String[] value = request.queryParamsValues(param);
-                    int len = value.length;
-                    if (len == 0) {
+                    System.out.print(param + " ");
+                    String value = request.queryParams(param);
+                    if (value == null) {
                         i += 2;
-                        continue;
-                    } else if (len == 1) {
-                        values[i++] = Integer.parseInt(value[0]);
-                        values[i++] = Integer.parseInt(value[0]);
+                        System.out.println("NULL");
                     } else {
-                        response.status(400);
-                        response.type("application/json");
-                        db.disconnect();
-                        return gson.toJson(new StructuredResponse("error", "Server Shutdown", null));
+                        values[i++] = Integer.parseInt(value);
+                        values[i++] = Integer.parseInt(value);
+                        System.out.println(value);
+                        // response.status(400);
+                        // response.type("application/json");
+                        // db.disconnect();
+                        // return gson.toJson(new StructuredResponse("error", "Server Shutdown", null));
                     }
                 }
                 ArrayList<DataRowUserProfile> data = db.readAll(values);
