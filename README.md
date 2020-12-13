@@ -1,4 +1,4 @@
-﻿# Getting Started: Roommates Finder
+﻿# Getting Started: Roommates Finder (DEMO: https://cse264-final-project.herokuapp.com/)
 ## Introduction 
 Roommates Finder is an app where we provide a safe and secure environment, in which users can fill out their roommate preferences and look for potential roommates with matching lifestyle. This project basically consist of two parts：
 - Backend: the server for Roommates Finder using the Java Spark web framework and deployed on heroku; a command-line administrative app for management of the tables 
