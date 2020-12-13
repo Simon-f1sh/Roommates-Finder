@@ -294,7 +294,7 @@ public class Database {
         DataAdmin res = null;
         try {
             uSelectOne.setInt(1, id);
-            ResultSet rs = uSelectOne.executeQuery();
+            ResultSet rs = uCheckAdmin.executeQuery();
             if (rs.next()) {
                 res = new DataAdmin(rs.getInt("admin"));
             }
