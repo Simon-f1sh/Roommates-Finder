@@ -13,10 +13,10 @@ Backend:
 
 ## Functionality:
 User:
-- ~/login		Login page
-- ~/profile/:uid 	Put user profile 
-- ~/profile 	Get all profile
-- ~/profile/:uid 	Get user profile
+- ~/login                 Login page
+- ~/profile/:uid 	        Put user profile 
+- ~/profile?searchQuery 	Get all profile matching search query
+- ~/profile/:uid 	        Get user profile
 
 Admin:
 - all functionalities user have
@@ -30,7 +30,7 @@ Web:
 
 ## User Story/Use Case:
 ### User
-- All users must sign up/login to access the app.
+- All users must sign up/login with Google account to access the app.
 - In the app, users will be able to view other user profiles by searching on the main page. 
 - The aim is to provide users with a private, safe environment to look for roommates.
 - Administrators are authorized to delete accounts with the consideration of protecting the application environment as secured, civilized. 
@@ -68,10 +68,10 @@ To run our application, below are the API keys, databases, and deploy method nee
 - Git: we use Git to track our works
 - Terminal: Mac has good default terminal. For Windows, the default terminal is fine but I recommend Git Bash
 - VS code: I recommend the visual studio code for coding
-- Bitbucket account: you should create an account so that we could share out project with you
+- Github account: you should create an account so that we could share out project with you
 
 ## How to Get Started
-1. Go to the repo on Bitbucket (we will add you to the project)
+1. Go to the repo on Github (we will add you to the project)
 2. Copy the command starts with `git clone`
 3. Create a folder in the local where you want to work on your project
 4. Run the `git clone` command in your terminal to get a copy of the project to your folder
@@ -79,7 +79,7 @@ To run our application, below are the API keys, databases, and deploy method nee
 6. Start working
 7. After finishing your work, use command `git add` to add the files you want to save.
 8. Then, `git commit` to save your works
-9. Finally, `git push` to save your work on the Bitbucket repo
+9. Finally, `git push` to save your work on the Github repo
 
 # Developer Instructions
 
@@ -95,14 +95,14 @@ We use Java Spark to map the Routes to the corresponding Spark functions so that
 We use Google API in the backend for authentication purpose. We check auth token sent from the front-ends with Google OAuth. For more details, please check out [https://developers.google.com/identity/sign-in/web/backend-auth](https://developers.google.com/identity/sign-in/web/backend-auth)
 
 ### App.java
-App.java is the main program of the Admin app. It contains the set up of the Database, interaction with user, and calling the functions in the database.
+App.java is the main program of the backend. It contains the set up of the Database, set up of the Routes, and calling the functions in the database.
 
 ### Database.java
 Database is responsible for the interaction with our heroku database. To do that, we have to write the prepared SQL statements.
    
 ### Compiling and Running
 To compile the code, run `mvn package` in the terminal to compile the program and run the tests. Then, run `mvn exec:java`.
-Our database URL is attached below and coded in backend, so no need to hard code the URL in the terminal. 
+Our database URL is attached below and configured on Heroku, so no need to hard code the URL in the terminal. 
 `DATABASE_URL=postgres://gwnqnodzrlxyoi:7e31094af269cc8a9c12fbf4ef752ffc54d58d75646ded60caa7a78fae76fd1c@ec2-52-2-82-109.compute-1.amazonaws.com:5432/d4pu28mdcacupl 
 `
 
@@ -120,7 +120,7 @@ All HTML files are stored in the frontend folder, where JavaScript files are sto
 All CSS files are stored in the frontend folder, where JavaScript files are stored at. CSS is in charge of the styling of the web page, such as the color of the background, the pop-up form, visualization of tables. 
 
 ### Deploy
-Since the web has to be deployed with the backend together, to deploy the web on our heroku server, first you have to run deploy.sh with `sh deploy.sh` in the terminal. Then, use command `mvn heroku:deploy` in the backend folder to deploy your web on the server.
+Since the web has to be deployed with the backend together, to deploy the web on our heroku server, first you have to run deploy.sh with `sh deploy.sh` command in the frontend folder. Then, use command `mvn package; mvn heroku:deploy` in the backend folder to deploy your web on the server.
 
 If you have add new .html, .css or .js files, please add the .html, .css files to the deploy.sh and add the .js files to main.js  reference when you want to deploy.
 
