@@ -1,10 +1,9 @@
 package edu.lehigh.cse280.backend;
 
 import java.util.Date;
-//phase 2 Shenyi Yu
 /**
  * DataRowUserProfile holds a row of information.  A row of information consists of
- * an identifier, strings for a "username", "email", "salt", "password" and "intro".
+ * an identifier, strings for a "username", "name", "email", "password" and "intro".
  * 
  * Because we will ultimately be converting instances of this object into JSON
  * directly, we need to make the fields public.  That being the case, we will
@@ -47,6 +46,18 @@ public class DataRowUserProfile {
         uEmail = email;
     }
 
+    /**
+     * Create a new DataRowUserProfile with the provided user id and parameters,
+     *
+     * @param uid The id to associate with this row.  Assumed to be unique
+     *           throughout the whole program.
+     * 
+     * @param username The username string for this row of data
+     * 
+     * @param email The email string for this row of data
+     * 
+     * @param admin If the user is admin
+     */
     DataRowUserProfile(int uid, String username, String email, int admin) {
         uId = uid;
         uName = username;

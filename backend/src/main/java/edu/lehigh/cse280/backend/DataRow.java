@@ -29,16 +29,7 @@ public class DataRow {
     public String uHobby;
 
     /**
-     * Create a new DataRow with the provided id and title/content, and a 
-     * creation date based on the system clock at the time the constructor was
-     * called
-     *
-     * @param mid The id to associate with this row.  Assumed to be unique
-     *           throughout the whole program.
-     *
-     * @param title The title string for this row of data
-     *
-     * @param content The content string for this row of data
+     * Constructor that input all data
      */
     DataRow(int id, String username, String email, int gender, int tidiness, int noise, int sleep, int wake, int pet, int visitor, String hobby) {
         uid = id;

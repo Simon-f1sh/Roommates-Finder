@@ -3,8 +3,6 @@ package edu.lehigh.cse280.backend;
 /**
  * StructuredResponse provides a common format for success and failure messages,
  * with an optional payload of type Object that can be converted into JSON.
- * 
- * NB: since this will be converted into JSON, all fields must be public.
  */
 public class StructuredResponse {
     /**
