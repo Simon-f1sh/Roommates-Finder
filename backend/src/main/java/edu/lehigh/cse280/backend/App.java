@@ -158,11 +158,10 @@ public class App
                 int i = 0;
                 for (String param : params) {
                     String[] value = request.queryParamsValues(param);
-                    int len = value.length;
-                    if (len == 0) {
+                    if (value == null) {
                         i += 2;
                         continue;
-                    } else if (len == 1) {
+                    } else if (value.length == 1) {
                         values[i++] = Integer.parseInt(value[0]);
                         values[i++] = Integer.parseInt(value[0]);
                     } else {

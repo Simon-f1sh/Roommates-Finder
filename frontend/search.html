@@ -110,13 +110,23 @@
                         <br>
                         <br>
                         <br>
-                        <input id="sumbit" type="submit" value="Submit">
+                        <button type="button" class="submit" onclick="searchRes()">Submit</button>
                       </form>
                 </div>
-                <div class="bot">
-                    <h4>Matching Roommates</h4>
-                    <p id="result"></p>
-                </div>
+            </div>
+            <div class="right" id="searchResultWraper" style="display: none">
+                <h3>Searching Results</h3>
+                <table id="searchResult">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Bio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </body>

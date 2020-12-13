@@ -63,6 +63,45 @@ function profile() {
 function search() {
     window.location.href = "/search.html";
 }
+
+function searchRes() {
+    let gender = document.getElementById("gender");
+    let tidiness = document.getElementById("tidiness");
+    let noise = document.getElementById("noise");
+    let pet = document.getElementById("pet");
+    let visitor = document.getElementById("visitor");
+    let sleep = document.getElementById("sleep");
+    let wake = document.getElementById("wake");
+
+    // make an ajax get
+    $.ajax({
+        type: "GET",
+        //gender=2&tidiness=1&noise=1&pet=1&visitor=1&sleep=1&wake=1
+        url: "/profile?gender=" + gender.value + "&tidiness=" + tidiness.value + "&noise=" + noise.value + "&pet=" + pet.value + "&visitor=" + visitor.value + "&sleep=" + sleep.value + "&wake=" + wake.value,
+        dataType: "json",
+        success: function(data) {
+            // append info
+            let searchResult = document.getElementById("searchResult").getElementsByTagName("tbody")[0];
+            for (let i = 0; i < len(data.mData); i++) {
+                let newRow = document.createElement("tr");
+                let newName = document.createElement("td");
+                let newEmail = document.createElement("td");
+                let newBio = document.createElement("td");
+                newName.innerHTML = data.mData[i].uName;
+                newEmail.innerHTML = data.mData[i].uEmail;
+                newBio.innerHTML = "Need to obtain data from backend";
+                newRow.appendChild(newName);
+                newRow.appendChild(newEmail);
+                newRow.appendChild(newBio);
+                searchResult.appendChild(newRow)
+            }
+        },
+        error: function() {
+            console.log("failed to retrieve data from backend")
+        }
+    });
+}
+
 function openForm(){
     console.log("edit profile");
     document.getElementById("myForm").style.display = "block";
