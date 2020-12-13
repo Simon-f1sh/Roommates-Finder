@@ -102,9 +102,13 @@ input{
   color: #919aa3;
 }
 
+.wrapper .right .bot {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
 #myForm {
   display: none;
-  border: 3px solid #f1f1f1;
+  border: 5px solid #f1f1f1;
   z-index: 9;
 }
 
