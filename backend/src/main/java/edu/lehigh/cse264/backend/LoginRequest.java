@@ -1,4 +1,4 @@
-package edu.lehigh.cse280.backend;
+package edu.lehigh.cse264.backend;
 
 /**
  * LoginRequest provides a format for clients to present email and password

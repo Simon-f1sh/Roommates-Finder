@@ -1,4 +1,4 @@
-package edu.lehigh.cse280.backend;
+package edu.lehigh.cse264.backend;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
